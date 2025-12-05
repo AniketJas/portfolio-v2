@@ -1,19 +1,13 @@
 import {
-  faHouse,
-  faUser,
-  faEnvelope,
-} from "@fortawesome/free-regular-svg-icons";
-import {
-  faCode,
-  faBriefcase,
-  faGraduationCap,
-  faDiagramProject,
-  faTrophy,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-const iconBaseStyles =
-  "cursor-pointer transition-all duration-300 ease-in-out p-4";
+  Home,
+  User,
+  Code,
+  Briefcase,
+  GraduationCap,
+  Trophy,
+  FolderGit2,
+  Mail,
+} from "lucide-react";
 
 interface SideNavbarProps {
   currentSection: number;
@@ -21,36 +15,30 @@ interface SideNavbarProps {
 }
 
 const sections = [
-  { icon: faHouse, name: "Home" },
-  { icon: faUser, name: "About Me" },
-  { icon: faCode, name: "Skills" },
-  { icon: faBriefcase, name: "Work Experience" },
-  { icon: faGraduationCap, name: "Education" },
-  { icon: faTrophy, name: "Certificates" },
-  { icon: faDiagramProject, name: "Projects" },
-  { icon: faEnvelope, name: "Contact Me" },
+  { icon: Home, name: "Home" },
+  { icon: User, name: "About Me" },
+  { icon: Code, name: "Skills" },
+  { icon: Briefcase, name: "Work Experience" },
+  { icon: GraduationCap, name: "Education" },
+  { icon: Trophy, name: "Certificates" },
+  { icon: FolderGit2, name: "Projects" },
+  { icon: Mail, name: "Contact Me" },
 ];
 
 const SideNavbar = ({ currentSection, scrollToSection }: SideNavbarProps) => {
   return (
-    <div
-      className={`fixed top-1/2 left-6 -translate-y-1/2 flex flex-col items-center text-lg shadow-2xl bg-white/70 backdrop-blur-md rounded-2xl transition-all duration-700 ease-in-out z-50 py-2 px-2
-      ${currentSection > 0 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10 pointer-events-none"}`}
-    >
-      {sections.map((section, index) => (
-        <div key={index} className="relative group">
-          {/* Icon */}
-          <FontAwesomeIcon
-            icon={section.icon}
-            className={`${iconBaseStyles} ${currentSection === index
-              ? "text-white text-xl bg-black border rounded-xl" // active section
-              : "text-gray-500 hover:text-black hover:text-2xl" // inactive
-              }`}
+    <div className="hidden sm:flex fixed top-1/2 left-6 -translate-y-1/2 flex-col items-center gap-2 bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl p-2 z-50">
+      {sections.map(({ icon: Icon, name }, index) => (
+        <div key={index} className="group relative">
+          <Icon
             onClick={() => scrollToSection(index)}
+            className={`w-5 h-5 p-4 box-content rounded-lg cursor-pointer transition-all duration-300 ${currentSection === index
+              ? "bg-black text-white"
+              : "text-gray-500 hover:text-black hover:w-7 hover:h-7"
+              }`}
           />
-          {/* Tooltip / Section name */}
-          <div className="absolute left-20 top-1/2 -translate-y-1/2 whitespace-nowrap bg-white/70 font-bold text-sm ease-in-out text-black px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-            {section.name}
+          <div className="absolute left-20 top-1/2 -translate-y-1/2 whitespace-nowrap bg-white/70 px-2 py-1 rounded-md text-sm font-bold text-black opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+            {name}
           </div>
         </div>
       ))}
