@@ -12,121 +12,83 @@ import Resume from "./components/Resume";
 
 const App = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const currentSectionRef = useRef(0);
+  // Refs for each section element
+  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [currentSection, setCurrentSection] = useState(0);
 
-  const sections = [<Hero key="hero" />, <AboutMe key="about" />, <Skills key="skills" />, <Experience key="exp" />, <Education key="education" />, <Certificates key="certificate" />, <Projects key="projects" />, <ContactMe key="Contact Me" />
+  const sections = [
+    <Hero key="hero" />,
+    <AboutMe key="about" />,
+    <Skills key="skills" />,
+    <Experience key="exp" />,
+    <Education key="education" />,
+    <Certificates key="certificate" />,
+    <Projects key="projects" />,
+    <ContactMe key="Contact Me" />,
   ];
 
-  // Keep ref synced with state
-  useEffect(() => {
-    currentSectionRef.current = currentSection;
-  }, [currentSection]);
-
+  // Effect to observe which section is currently in view
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    let isThrottled = false;
-    let accumulatedDelta = 0;
-    const THRESHOLD = 50; // pixels needed to move a section
-    let touchStartY: number | null = null;
-
-    const scrollToSection = (next: number) => {
-      setCurrentSection(next);
-      isThrottled = true;
-      setTimeout(() => (isThrottled = false), 800); // throttle duration
+    const options = {
+      root: container, // Use the scrolling container as the viewport
+      rootMargin: "0px",
+      threshold: 0.5, // Trigger when 50% of the section is visible
     };
 
-    // Wheel / Trackpad
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      if (isThrottled) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // Find the index of the intersecting element
+          const index = sectionRefs.current.indexOf(entry.target as HTMLDivElement);
+          if (index !== -1) {
+            setCurrentSection(index);
+          }
+        }
+      });
+    }, options);
 
-      accumulatedDelta += e.deltaY;
-      const current = currentSectionRef.current;
+    // Store current refs in a variable for cleanup
+    const currentSectionRefs = sectionRefs.current;
 
-      if (accumulatedDelta >= THRESHOLD && current < sections.length - 1) {
-        scrollToSection(current + 1);
-        accumulatedDelta = 0;
-      } else if (accumulatedDelta <= -THRESHOLD && current > 0) {
-        scrollToSection(current - 1);
-        accumulatedDelta = 0;
+    // Observe each section
+    currentSectionRefs.forEach((section) => {
+      if (section) {
+        observer.observe(section);
       }
-    };
-
-    // Arrow keys
-    const handleKey = (e: KeyboardEvent) => {
-      if (isThrottled) return;
-
-      const current = currentSectionRef.current;
-      if (e.key === "ArrowDown" && current < sections.length - 1) scrollToSection(current + 1);
-      else if (e.key === "ArrowUp" && current > 0) scrollToSection(current - 1);
-    };
-
-    // Touch events for mobile
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartY = e.touches[0].clientY;
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (isThrottled || touchStartY === null) return;
-
-      const currentY = e.touches[0].clientY;
-      const diff = touchStartY - currentY;
-      const current = currentSectionRef.current;
-
-      if (Math.abs(diff) < 30) return; // minimal swipe threshold
-      if (diff > 0 && current < sections.length - 1) scrollToSection(current + 1);
-      else if (diff < 0 && current > 0) scrollToSection(current - 1);
-
-      touchStartY = null; // reset after swipe
-    };
-
-    container.addEventListener("wheel", handleWheel, { passive: false });
-    window.addEventListener("keydown", handleKey);
-    container.addEventListener("touchstart", handleTouchStart, { passive: true });
-    container.addEventListener("touchmove", handleTouchMove, { passive: false });
-
-    return () => {
-      container.removeEventListener("wheel", handleWheel);
-      window.removeEventListener("keydown", handleKey);
-      container.removeEventListener("touchstart", handleTouchStart);
-      container.removeEventListener("touchmove", handleTouchMove);
-    };
-  }, [sections.length]);
-
-  // Smooth scroll to the current section
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    container.scrollTo({
-      top: currentSection * window.innerHeight,
-      behavior: "smooth",
     });
-  }, [currentSection]);
+
+    // Cleanup
+    return () => {
+      currentSectionRefs.forEach((section) => {
+        if (section) {
+          observer.unobserve(section);
+        }
+      });
+    };
+  }, [sections.length]); // Re-run if sections array changes
 
   return (
-    <div ref={containerRef} className="h-screen w-screen overflow-hidden relative">
+    // Container is now scrollable
+    <div ref={containerRef} className="h-screen w-screen overflow-y-auto relative no-scrollbar">
       {/* Side navbar */}
-      {/* <SideNavbar currentSection={currentSection} /> */}
       <SideNavbar
         currentSection={currentSection}
         scrollToSection={(index) => {
-          const container = containerRef.current;
-          if (!container) return;
-          container.scrollTo({
-            top: index * window.innerHeight,
+          // Scroll to the corresponding ref element
+          sectionRefs.current[index]?.scrollIntoView({
             behavior: "smooth",
+            block: "start",
           });
-          setCurrentSection(index);
         }}
       />
 
       {/* Sections */}
       {sections.map((Section, index) => (
-        <div key={index} className="h-screen w-full">
+        // Each section is given a ref
+        <div key={index} ref={(el) => { sectionRefs.current[index] = el; }}>
           {Section}
           <div
             className={`fixed bottom-6 right-6 transition-all duration-700 ease-in-out z-50
