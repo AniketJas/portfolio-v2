@@ -1,3 +1,4 @@
+import { useScrollSpy } from "../hooks/useScrollSpy.js";
 import {
   Home,
   User,
@@ -29,30 +30,14 @@ const SideNavbar = () => {
     document.getElementById(section)?.scrollIntoView({ behavior: "smooth" });
   }
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      {
-        threshold: 0.6,
-      }
-    );
-
-    sections.forEach(({ section }) => {
-      const el = document.getElementById(section);
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
-  }, []);
+  useScrollSpy({
+    sections: sections.map((s) => s.section),
+    setActiveSection,
+    threshold: 0.6,
+  });
 
   return (
-    <section className="hidden md:flex flex-col items-center justify-center ml-6 h-screen fixed left-0 top-0">
+    <nav className="hidden md:flex flex-col items-center justify-center ml-6 h-screen fixed left-0 top-0 z-50">
       <div className="py-6 px-4 bg-white rounded-xl flex flex-col items-center justify-center gap-4 shadow-lg">
         {sections.map(({ id, icon: Icon, section }) => (
           <button key={id} className={`p-3 rounded-lg transition-all duration-200
@@ -65,7 +50,7 @@ const SideNavbar = () => {
           </button>
         ))}
       </div>
-    </section>
+    </nav>
   )
 }
 
