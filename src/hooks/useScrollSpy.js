@@ -4,13 +4,15 @@ export const useScrollSpy = ({
   sections,
   setActiveSection,
   threshold = 0.6,
+  onSectionEnter, // NEW (optional)
 }) => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
+            setActiveSection?.(entry.target.id);
+            onSectionEnter?.(entry.target.id);
           }
         });
       },
@@ -23,5 +25,5 @@ export const useScrollSpy = ({
     });
 
     return () => observer.disconnect();
-  }, [sections, setActiveSection, threshold]);
+  }, [sections, setActiveSection, threshold, onSectionEnter]);
 };
