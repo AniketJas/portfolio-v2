@@ -37,8 +37,8 @@ const SideNavbar = () => {
   });
 
   return (
-    <nav className="hidden md:flex flex-col items-center justify-center ml-6 h-screen fixed left-0 top-0 z-50">
-      <div className="py-6 px-4 bg-white rounded-xl flex flex-col items-center justify-center gap-4 shadow-lg">
+    <nav className="hidden lg:flex flex-col items-center justify-center ml-6 h-screen fixed left-0 top-0 z-50">
+      <div className="py-6 px-4 bg-white rounded-xl flex flex-col items-center justify-center gap-4 shadow-xl">
         {sections.map(({ id, icon: Icon, section }) => (
           <button key={id} className={`p-3 rounded-lg transition-all duration-200
             ${activeSection === section
