@@ -10,7 +10,7 @@ import Projects from "./pages/Projects";
 
 const Layout = () => {
   return (
-    <main className="overflow-y-scroll no-scrollbar h-screen select-none cursor-default" >
+    <main className="overflow-y-scroll no-scrollbar select-none cursor-default" >
       <SideNavbar />
 
       <section id="home">
