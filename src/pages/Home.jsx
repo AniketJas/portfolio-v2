@@ -11,7 +11,7 @@ const Home = () => {
 
       <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-black/30 md:to-transparent" />
 
-      <div className="relative z-10 w-full px-6 md:px-20 lg:px-32 pt-20 md:pt-32 pb-16 md:pb-28 text-center md:text-left">
+      <div className="relative z-10 w-full px-6 md:px-20 lg:px-36 pt-20 md:pt-32 pb-16 md:pb-28 text-center md:text-left">
         <h1 className="text-4xl md:text-5xl lg:text-8xl font-extrabold text-white drop-shadow-lg opacity-0 mb-3 md:mb-4 translate-y-4 animate-fade-in">
           Hi, I'm Aniket Jas
         </h1>

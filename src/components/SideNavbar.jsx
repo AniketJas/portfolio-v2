@@ -1,4 +1,5 @@
 import { useScrollSpy } from "../hooks/useScrollSpy.js";
+import { useState } from "react";
 import {
   Home,
   User,
@@ -9,7 +10,6 @@ import {
   Mail,
   FolderCode,
 } from "lucide-react";
-import { useEffect, useState } from "react";
 
 const SideNavbar = () => {
 
