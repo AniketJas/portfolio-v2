@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import Layout from "./Layout"
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
 
@@ -9,6 +10,13 @@ const App = () => {
 
   return (
     <>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          className: "text-sm",
+          duration: 4000,
+        }}
+      />
       <Layout />
     </>
   )
