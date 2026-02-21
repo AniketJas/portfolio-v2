@@ -1,4 +1,4 @@
-const BoxWithTitle = ({ title, children }) => {
+const BorderBoxWithTitle = ({ title, children }) => {
   return (
     <div className="relative border-2 border-gray-400 rounded-xl p-6">
       {/* Title */}
@@ -16,4 +16,4 @@ const BoxWithTitle = ({ title, children }) => {
   );
 };
 
-export default BoxWithTitle;
+export default BorderBoxWithTitle;
